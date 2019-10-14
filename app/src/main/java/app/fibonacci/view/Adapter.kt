@@ -3,31 +3,22 @@ package app.fibonacci.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
+import androidx.recyclerview.widget.RecyclerView
 import app.fibonacci.R
 import app.fibonacci.model.Fibonacci
 
-class Adapter : BaseAdapter() {
+class Adapter : RecyclerView.Adapter<ViewHolder>() {
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
-        (convertView ?: createView(parent, getItemViewType(position))).also {
-            with(getItem(position)) {
-                it.findViewById<TextView>(android.R.id.text1).text = "$value"
-                it.findViewById<TextView>(android.R.id.text2).text = "$index"
-            }
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        createView(parent, viewType).let { ViewHolder(it) }
 
-    override fun getItem(position: Int): Fibonacci = values[position]
-
-    override fun getItemId(position: Int): Long = values[position].index.toLong()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.bind(values[position])
 
     override fun getItemViewType(position: Int): Int = position % 2
 
-    override fun getCount(): Int = values.size
-
-    override fun getViewTypeCount(): Int = 2
+    override fun getItemCount(): Int = values.size
 
     private fun createView(parent: ViewGroup, viewType: Int): View =
         LayoutInflater.from(parent.context)
